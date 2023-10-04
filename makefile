@@ -26,7 +26,7 @@ SRC = $(wildcard src/*.c)
 OBJ = $(SRC:src/%.c=obj/%.o)
 
 # Binary files
-BIN = bin/daboxblue
+BIN = bin/bluex-zvx
 
 # Default target
 all: $(BIN)
