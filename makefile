@@ -1,44 +1,36 @@
-# Makefile: 
-# Folder structure:
-# - src (source files)
-# - obj (object files)
-# - bin (binary files)
-# - include (header files)
-# - lib (library files)
-# - doc (documentation files)
-
-# Flags: gcc src/main.c -o obj/main.o -lbluetooth
-
-
-# Compiler
+# Compiler and flags
 CC = gcc
+CFLAGS = -Wall -Iinclude
 
-# Compiler flags
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c99 -g
+# Directories
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+INCLUDE_DIR = include
 
-# Linker flags
-LDFLAGS = -lbluetooth
+# Files and targets
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+TARGET = $(BIN_DIR)/main
 
-# Source files
-SRC = $(wildcard src/*.c)
-
-# Object files
-OBJ = $(SRC:src/%.c=obj/%.o)
-
-# Binary files
-BIN = bin/bluex-zvx
+# Libraries for bluez
+LIBS = -lbluetooth
 
 # Default target
-all: $(BIN)
+all: $(TARGET)
 
 # Linking
-$(BIN): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(BIN) $(LDFLAGS)
+$(TARGET): $(OBJ)
+	mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
-# Compiling
-obj/%.o: src/%.c
+# Compilation
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean
 clean:
-	rm -f $(OBJ) $(BIN)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
+
+.PHONY: all clean
